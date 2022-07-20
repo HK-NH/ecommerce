@@ -33,7 +33,7 @@ public class WebSecurityConfiguration {
         http.authorizeRequests().anyRequest().authenticated();
         return http.build();
     }
-
+ 
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
