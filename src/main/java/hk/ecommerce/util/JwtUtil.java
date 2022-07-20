@@ -12,23 +12,16 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import static hk.ecommerce.util.JwtConstants.*;
 
 @Component
 public class JwtUtil {
 
-    private static final String keySecret = "HamzaKecha";
-
-    private static final int expirationAccessTime = 36000*6;
-
-    private static final int expirationRefreshTime = 24*3600*1000;
-
     private final UserDetailsService userDetailsService;
 
     private final AppUserService appUserService;
-
-    private Logger logger = Logger.getLogger(JwtUtil.class.getName());
 
     public JwtUtil(UserDetailsService userDetailsService, AppUserService appUserService) {
         this.userDetailsService = userDetailsService;
@@ -36,20 +29,19 @@ public class JwtUtil {
     }
 
     public Map<String,String> createJWT(AppUser appUser, HttpServletRequest request){
-        logger.info(String.valueOf(expirationRefreshTime));
         final CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(appUser.getUsername());
-        Algorithm algorithm =Algorithm.HMAC256(keySecret);
+        Algorithm algorithm =Algorithm.HMAC256(SECRET);
         String jwtAccessToken = JWT.create()
                 .withSubject(customUserDetails.getUsername())
                 .withIssuer(request.getRequestURL().toString())
-                .withExpiresAt(new Date(System.currentTimeMillis()+expirationAccessTime))
-                .withClaim("roles",customUserDetails.getAuthorities()
+                .withExpiresAt(new Date(System.currentTimeMillis()+ EXPIRATIONACCESSTIME))
+                .withClaim(CLAIMROLES,customUserDetails.getAuthorities()
                         .stream().map(a -> a.getAuthority()).collect(Collectors.toList()))
                 .sign(algorithm);
         String jwtRefreshToken = JWT.create()
                 .withSubject(customUserDetails.getUsername())
                 .withIssuer(request.getRequestURL().toString())
-                .withExpiresAt(new Date(System.currentTimeMillis()+expirationRefreshTime))
+                .withExpiresAt(new Date(System.currentTimeMillis()+ EXPIRATIONREFRESHTIME))
                 .sign(algorithm);
         Map<String,String> idToken = new HashMap<>();
         idToken.put("refresh-token",jwtRefreshToken);
@@ -58,11 +50,11 @@ public class JwtUtil {
     }
 
     public Map<String, String> refreshToken(HttpServletRequest request){
-        String authToken = request.getHeader("Authorization");
-        if(authToken!= null && authToken.startsWith("Bearer ")){
+        String authToken = request.getHeader(AUTH_HEADER);
+        if(authToken!= null && authToken.startsWith(PREFIX)){
             try {
-                String refreshToken = authToken.substring(7);
-                Algorithm algorithm = Algorithm.HMAC256(keySecret);
+                String refreshToken = authToken.substring(PREFIX.length());
+                Algorithm algorithm = Algorithm.HMAC256(SECRET);
                 JWTVerifier jwtVerifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = jwtVerifier.verify(refreshToken);
                 String username = decodedJWT.getSubject();
@@ -75,4 +67,5 @@ public class JwtUtil {
         else
             throw new RuntimeException("Refresh token required");
     }
+
 }

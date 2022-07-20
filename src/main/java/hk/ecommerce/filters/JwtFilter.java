@@ -4,9 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import hk.ecommerce.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-public class JwtFilter extends OncePerRequestFilter {
+import static hk.ecommerce.util.JwtConstants.*;
 
-    private static final String keySecret = "HamzaKecha";
+public class JwtFilter extends OncePerRequestFilter {
 
     private Logger logger = Logger.getLogger(JwtFilter.class.getName());
 
@@ -32,18 +29,17 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getServletPath().equals("/api/auth/refreshToken")) {
-            logger.info(request.getServletPath());
             filterChain.doFilter(request,response);
         } else {
-            String authorizationToken = request.getHeader("Authorization");
-            if (authorizationToken != null && authorizationToken.startsWith("Bearer ")) {
+            String authorizationToken = request.getHeader(AUTH_HEADER);
+            if (authorizationToken != null && authorizationToken.startsWith(PREFIX)) {
                 try {
-                    String jwt = authorizationToken.substring(7);
-                    Algorithm algorithm = Algorithm.HMAC256(keySecret);
+                    String jwt = authorizationToken.substring(PREFIX.length());
+                    Algorithm algorithm = Algorithm.HMAC256(SECRET);
                     JWTVerifier jwtVerifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
                     String username = decodedJWT.getSubject();
-                    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+                    String[] roles = decodedJWT.getClaim(CLAIMROLES).asArray(String.class);
                     Collection<GrantedAuthority> authorities = new ArrayList<>();
                     for (String r : roles) {
                         authorities.add(new SimpleGrantedAuthority(r));
