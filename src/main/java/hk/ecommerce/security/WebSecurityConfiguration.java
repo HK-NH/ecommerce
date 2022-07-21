@@ -44,7 +44,8 @@ public class WebSecurityConfiguration {
         http.addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests().mvcMatchers("/api/auth/login","/api/auth/register","/api/auth/refreshToken","/api/auth/validateRegistration/**")
                 .permitAll();
-        http.authorizeRequests().anyRequest().authenticated();
+//        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests().anyRequest().permitAll();
         return http.build();
     }
 

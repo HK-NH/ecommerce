@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthenticationController {
 
     private final JwtUtil jwtUtil;
@@ -37,12 +37,12 @@ public class AuthenticationController {
         return jwtUtil.createJWT(appUser,request);
     }
 
-    @PostMapping("/register")
-    public void register(@RequestBody AppUser appUser){
-        appUserService.saveUser(appUser);
-        String token = verificationTokenService.generateToken(appUser);
-        rabbitSender.send(token);
-    }
+//    @PostMapping("/register")
+//    public void register(@RequestBody AppUser appUser){
+//        appUserService.saveUser(appUser);
+//        String token = verificationTokenService.generateToken(appUser);
+//        rabbitSender.send(token);
+//    }
 
     @GetMapping("/validateRegistration/{token}")
     public Boolean validate(@PathVariable String token){
