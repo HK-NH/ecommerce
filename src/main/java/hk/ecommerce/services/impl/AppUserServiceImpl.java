@@ -4,6 +4,7 @@ import hk.ecommerce.entities.AppRole;
 import hk.ecommerce.entities.AppUser;
 import hk.ecommerce.repositories.AppRoleRepository;
 import hk.ecommerce.repositories.AppUserRepository;
+import hk.ecommerce.repositories.VerificationTokenRepository;
 import hk.ecommerce.security.CustomUserDetails;
 import hk.ecommerce.services.AppUserService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,15 +22,17 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final AppRoleRepository appRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationTokenRepository verificationTokenRepository;
 
-    public AppUserServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository,PasswordEncoder passwordEncoder) {
+    public AppUserServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, PasswordEncoder passwordEncoder, VerificationTokenRepository verificationTokenRepository) {
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     @Override
-    public void addUser(AppUser appUser) {
+    public void saveUser(AppUser appUser) {
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
         appUserRepository.save(appUser);
     }
@@ -56,6 +59,17 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     @Override
     public List<AppUser> getListUsers() {
         return appUserRepository.findAll();
+    }
+
+    @Override
+    public Boolean validateUser(String token) {
+        AppUser user = verificationTokenRepository.findVerificationTokenByToken(token).getUser();
+        if(user != null){
+            user.setActive(true);
+            appUserRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     @Override

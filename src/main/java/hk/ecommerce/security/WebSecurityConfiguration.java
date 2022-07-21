@@ -8,10 +8,14 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
 @Configuration
 public class WebSecurityConfiguration {
@@ -27,13 +31,23 @@ public class WebSecurityConfiguration {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(authenticationProvider);
         http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.cors(c -> {
+            CorsConfigurationSource source = request -> {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(List.of("*"));
+                config.setAllowedMethods(List.of("*"));
+                return config;
+            };
+            c.configurationSource(source);
+        });
+        http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.authorizeRequests().mvcMatchers("/api/auth/login","/api/auth/register","/api/auth/refreshToken").permitAll();
+        http.authorizeRequests().mvcMatchers("/api/auth/login","/api/auth/register","/api/auth/refreshToken","/api/auth/validateRegistration/**")
+                .permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         return http.build();
     }
- 
+
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
