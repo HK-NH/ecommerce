@@ -2,6 +2,7 @@ package hk.ecommerce.controllers;
 
 import hk.ecommerce.entities.AppUser;
 import hk.ecommerce.services.AppUserService;
+import hk.ecommerce.services.EmailService;
 import hk.ecommerce.services.VerificationTokenService;
 import hk.ecommerce.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,13 +23,15 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final AppUserService appUserService;
     private final VerificationTokenService verificationTokenService;
+    private final EmailService emailService;
 
-    public AuthenticationController(JwtUtil jwtUtil, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, AppUserService appUserService, VerificationTokenService verificationTokenService) {
+    public AuthenticationController(JwtUtil jwtUtil, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, AppUserService appUserService, VerificationTokenService verificationTokenService, EmailService emailService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.appUserService = appUserService;
         this.verificationTokenService = verificationTokenService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/login")
@@ -40,12 +43,15 @@ public class AuthenticationController {
     @PostMapping("/register")
     public void register(@RequestBody AppUser appUser){
         appUserService.saveUser(appUser);
-        verificationTokenService.generateToken(appUser);
+        String token = verificationTokenService.generateToken(appUser);
+        emailService.sendAccountActivationEmail(token);
     }
 
     @GetMapping("/validateRegistration/{token}")
     public void validate(@PathVariable String token){
         appUserService.validateUser(token);
+        // send email that account has been confirmed
+        emailService.sendConfirmationEmail();
     }
 
     @GetMapping("/refreshToken")

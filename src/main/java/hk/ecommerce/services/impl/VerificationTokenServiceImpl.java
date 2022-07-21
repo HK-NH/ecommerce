@@ -18,11 +18,12 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public void generateToken(AppUser user) {
+    public String generateToken(AppUser user) {
         String randomUUID = UUID.randomUUID().toString();
         RegistrationToken token = new RegistrationToken();
         token.setToken(randomUUID);
         token.setUser(user);
         verificationTokenRepository.save(token);
+        return randomUUID;
     }
 }
