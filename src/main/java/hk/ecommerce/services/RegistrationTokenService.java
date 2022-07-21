@@ -2,7 +2,7 @@ package hk.ecommerce.services;
 
 import hk.ecommerce.entities.AppUser;
 
-public interface VerificationTokenService {
+public interface RegistrationTokenService {
 
     String generateToken(AppUser user);
 }

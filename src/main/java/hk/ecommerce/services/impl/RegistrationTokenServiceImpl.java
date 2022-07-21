@@ -2,18 +2,18 @@ package hk.ecommerce.services.impl;
 
 import hk.ecommerce.entities.AppUser;
 import hk.ecommerce.entities.RegistrationToken;
-import hk.ecommerce.repositories.VerificationTokenRepository;
-import hk.ecommerce.services.VerificationTokenService;
+import hk.ecommerce.repositories.RegistrationTokenRepository;
+import hk.ecommerce.services.RegistrationTokenService;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class VerificationTokenServiceImpl implements VerificationTokenService {
+public class RegistrationTokenServiceImpl implements RegistrationTokenService {
 
-    public final VerificationTokenRepository verificationTokenRepository;
+    public final RegistrationTokenRepository verificationTokenRepository;
 
-    public VerificationTokenServiceImpl(VerificationTokenRepository verificationTokenRepository) {
+    public RegistrationTokenServiceImpl(RegistrationTokenRepository verificationTokenRepository) {
         this.verificationTokenRepository = verificationTokenRepository;
     }
 

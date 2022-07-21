@@ -2,9 +2,10 @@ package hk.ecommerce.services.impl;
 
 import hk.ecommerce.entities.AppRole;
 import hk.ecommerce.entities.AppUser;
+import hk.ecommerce.entities.RegistrationToken;
 import hk.ecommerce.repositories.AppRoleRepository;
 import hk.ecommerce.repositories.AppUserRepository;
-import hk.ecommerce.repositories.VerificationTokenRepository;
+import hk.ecommerce.repositories.RegistrationTokenRepository;
 import hk.ecommerce.security.CustomUserDetails;
 import hk.ecommerce.services.AppUserService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,9 +23,9 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final AppRoleRepository appRoleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final VerificationTokenRepository verificationTokenRepository;
+    private final RegistrationTokenRepository verificationTokenRepository;
 
-    public AppUserServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, PasswordEncoder passwordEncoder, VerificationTokenRepository verificationTokenRepository) {
+    public AppUserServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, PasswordEncoder passwordEncoder, RegistrationTokenRepository verificationTokenRepository) {
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -63,10 +64,10 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
 
     @Override
     public Boolean validateUser(String token) {
-        AppUser user = verificationTokenRepository.findVerificationTokenByToken(token).getUser();
-        if(user != null){
-            user.setActive(true);
-            appUserRepository.save(user);
+        RegistrationToken registrationToken = verificationTokenRepository.findVerificationTokenByToken(token);
+        if(registrationToken != null){
+            registrationToken.getUser().setActive(true);
+            appUserRepository.save(registrationToken.getUser());
             return true;
         }
         return false;

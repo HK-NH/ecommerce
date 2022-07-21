@@ -3,12 +3,10 @@ package hk.ecommerce.controllers;
 import hk.ecommerce.amqp.RabbitSender;
 import hk.ecommerce.entities.AppUser;
 import hk.ecommerce.services.AppUserService;
-import hk.ecommerce.services.EmailService;
-import hk.ecommerce.services.VerificationTokenService;
+import hk.ecommerce.services.RegistrationTokenService;
 import hk.ecommerce.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,15 +18,13 @@ public class AuthenticationController {
 
     private final JwtUtil jwtUtil;
 
-    private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final AppUserService appUserService;
-    private final VerificationTokenService verificationTokenService;
+    private final RegistrationTokenService verificationTokenService;
     private final RabbitSender rabbitSender;
 
-    public AuthenticationController(JwtUtil jwtUtil, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, AppUserService appUserService, VerificationTokenService verificationTokenService, RabbitSender rabbitSender) {
+    public AuthenticationController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, AppUserService appUserService, RegistrationTokenService verificationTokenService, RabbitSender rabbitSender) {
         this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.appUserService = appUserService;
         this.verificationTokenService = verificationTokenService;
@@ -49,8 +45,8 @@ public class AuthenticationController {
     }
 
     @GetMapping("/validateRegistration/{token}")
-    public void validate(@PathVariable String token){
-        appUserService.validateUser(token);
+    public Boolean validate(@PathVariable String token){
+        return appUserService.validateUser(token);
         // send email that account has been confirmed
     }
 
