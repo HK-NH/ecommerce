@@ -24,15 +24,5 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(message);
     }
 
-    @Override
-    public void sendConfirmationEmail() {
-        SimpleMailMessage message = new SimpleMailMessage();
-        //setTo to the users real email just doing this for a test
-        message.setTo("justasmtp@gmail.com");
-        message.setFrom("hamza@noreply.com");
-        message.setSubject("Activation confirmation");
-        message.setText("Your account has been activated you can log in now");
-        javaMailSender.send(message);
-    }
 
 }

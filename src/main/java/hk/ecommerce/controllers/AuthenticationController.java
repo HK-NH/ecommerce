@@ -1,5 +1,6 @@
 package hk.ecommerce.controllers;
 
+import hk.ecommerce.amqp.RabbitSender;
 import hk.ecommerce.entities.AppUser;
 import hk.ecommerce.services.AppUserService;
 import hk.ecommerce.services.EmailService;
@@ -23,15 +24,15 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final AppUserService appUserService;
     private final VerificationTokenService verificationTokenService;
-    private final EmailService emailService;
+    private final RabbitSender rabbitSender;
 
-    public AuthenticationController(JwtUtil jwtUtil, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, AppUserService appUserService, VerificationTokenService verificationTokenService, EmailService emailService) {
+    public AuthenticationController(JwtUtil jwtUtil, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, AppUserService appUserService, VerificationTokenService verificationTokenService, RabbitSender rabbitSender) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.appUserService = appUserService;
         this.verificationTokenService = verificationTokenService;
-        this.emailService = emailService;
+        this.rabbitSender = rabbitSender;
     }
 
     @PostMapping("/login")
@@ -44,14 +45,13 @@ public class AuthenticationController {
     public void register(@RequestBody AppUser appUser){
         appUserService.saveUser(appUser);
         String token = verificationTokenService.generateToken(appUser);
-        emailService.sendAccountActivationEmail(token);
+        rabbitSender.send(token);
     }
 
     @GetMapping("/validateRegistration/{token}")
     public void validate(@PathVariable String token){
         appUserService.validateUser(token);
         // send email that account has been confirmed
-        emailService.sendConfirmationEmail();
     }
 
     @GetMapping("/refreshToken")
