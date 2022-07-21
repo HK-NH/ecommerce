@@ -20,7 +20,7 @@ public class AppUser {
     private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private Boolean active = false;
+    private Boolean active;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<AppRole> roles = new ArrayList<>();
 
@@ -30,12 +30,14 @@ public class AppUser {
         this.lastName = lastName;
         this.number = number;
         this.address = address;
+        this.active= false;
         this.username = username;
         this.password = password;
         this.roles = roles;
     }
 
     public AppUser() {
+        this.active = false;
     }
 
     public Long getId() {
