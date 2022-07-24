@@ -1,8 +1,5 @@
 package hk.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,7 +7,8 @@ import java.math.BigDecimal;
 @Entity
 public class Product implements Serializable {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
@@ -19,7 +17,6 @@ public class Product implements Serializable {
     @Lob
     private byte[] image;
     @ManyToOne
-//    @JsonManagedReference(value = "category_product")
     private Category category;
 
     public Product(Long id, String name, String description, BigDecimal unitPrice, int stock, byte[] image, Category category) {

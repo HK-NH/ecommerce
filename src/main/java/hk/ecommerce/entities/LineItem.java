@@ -1,10 +1,6 @@
 package hk.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class LineItem {
@@ -12,18 +8,13 @@ public class LineItem {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int quantity;
-    @OneToMany(targetEntity = Product.class)
-    @JsonManagedReference
-    private List<Product> products;
     @ManyToOne
-    @JsonBackReference(value = "lineItem_cart")
-    private Cart cart;
+    private Product product;
 
-    public LineItem(Long id, int quantity, List<Product> products, Cart cart) {
+    public LineItem(Long id, int quantity, Product product) {
         this.id = id;
         this.quantity = quantity;
-        this.products = products;
-        this.cart = cart;
+        this.product = product;
     }
 
     public LineItem() {
@@ -45,19 +36,12 @@ public class LineItem {
         this.quantity = quantity;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
 }

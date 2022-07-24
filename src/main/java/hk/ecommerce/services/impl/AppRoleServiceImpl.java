@@ -17,7 +17,7 @@ public class AppRoleServiceImpl implements AppRoleService {
     }
 
     @Override
-    public void addRole(AppRole appRole) {
+    public void save(AppRole appRole) {
         appRoleRepository.save(appRole);
     }
 

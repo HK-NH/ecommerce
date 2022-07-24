@@ -17,7 +17,7 @@ public class RegistrationToken {
         this.id = id;
         this.token = token;
         this.user = user;
-        this.expirationDate = expirationDate;
+        this.expirationDate = Instant.now();
     }
 
     public RegistrationToken() {

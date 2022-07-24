@@ -15,7 +15,6 @@ public class Category implements Serializable {
     private Long id;
     private String name;
     @OneToMany(targetEntity = Product.class, mappedBy = "category")
-//    @JsonBackReference(value = "category_product")
     @JsonIgnore
     private List<Product> products;
 

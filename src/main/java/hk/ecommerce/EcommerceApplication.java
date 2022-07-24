@@ -27,9 +27,9 @@ public class EcommerceApplication {
     CommandLineRunner runner(AppRoleService appRoleService, AppUserService appUserService, CategoryService categoryService, ProductService productService){
         return args -> {
             AppRole appRole = new AppRole(null,"ADMIN");
-            appRoleService.addRole(appRole);
+            appRoleService.save(appRole);
             AppRole appRole2 = new AppRole(null,"REGULAR");
-            appRoleService.addRole(appRole2);
+            appRoleService.save(appRole2);
             AppUser appUser = new AppUser(null,"firstName","lastName","0123456","adress","admin","123", List.of(appRole));
             appUser.setActive(true);
             appUserService.saveUser(appUser);

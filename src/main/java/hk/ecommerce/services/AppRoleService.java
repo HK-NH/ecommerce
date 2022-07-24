@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface AppRoleService {
 
-    void addRole(AppRole appRole);
+    void save(AppRole appRole);
     List<AppRole> getListRoles();
 }

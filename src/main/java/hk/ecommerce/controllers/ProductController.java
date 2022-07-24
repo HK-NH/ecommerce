@@ -2,7 +2,6 @@ package hk.ecommerce.controllers;
 
 import hk.ecommerce.entities.Product;
 import hk.ecommerce.services.ProductService;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

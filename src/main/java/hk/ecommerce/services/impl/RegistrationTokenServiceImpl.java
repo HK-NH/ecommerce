@@ -26,4 +26,11 @@ public class RegistrationTokenServiceImpl implements RegistrationTokenService {
         verificationTokenRepository.save(token);
         return randomUUID;
     }
+
+    @Override
+    public void deleteValidationToken(Long id) {
+        if(verificationTokenRepository.existsById(id)){
+            verificationTokenRepository.deleteById(id);
+        }
+    }
 }
