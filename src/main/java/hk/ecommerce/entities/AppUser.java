@@ -1,6 +1,7 @@
 package hk.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class AppUser {
     private String lastName;
     private String number;
     private String address;
-    @Column(unique = true)
+    @NaturalId
     private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

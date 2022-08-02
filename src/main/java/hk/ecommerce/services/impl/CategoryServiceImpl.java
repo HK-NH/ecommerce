@@ -1,7 +1,7 @@
 package hk.ecommerce.services.impl;
 
 import hk.ecommerce.entities.Category;
-import hk.ecommerce.repositories.CategoryRepository;
+import hk.ecommerce.jparepositories.CategoryRepository;
 import hk.ecommerce.services.CategoryService;
 import org.springframework.stereotype.Service;
 

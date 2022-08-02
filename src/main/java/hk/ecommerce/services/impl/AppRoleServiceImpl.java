@@ -1,7 +1,7 @@
 package hk.ecommerce.services.impl;
 
 import hk.ecommerce.entities.AppRole;
-import hk.ecommerce.repositories.AppRoleRepository;
+import hk.ecommerce.jparepositories.AppRoleRepository;
 import hk.ecommerce.services.AppRoleService;
 import org.springframework.stereotype.Service;
 

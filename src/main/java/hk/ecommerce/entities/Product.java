@@ -1,10 +1,14 @@
 package hk.ecommerce.entities;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
+@Document(indexName = "product")
 public class Product implements Serializable {
 
     @Id
@@ -17,6 +21,7 @@ public class Product implements Serializable {
     @Lob
     private byte[] image;
     @ManyToOne
+    @Field(type = FieldType.Nested, includeInParent = true)
     private Category category;
 
     public Product(Long id, String name, String description, BigDecimal unitPrice, int stock, byte[] image, Category category) {

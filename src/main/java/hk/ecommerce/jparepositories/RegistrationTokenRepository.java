@@ -1,4 +1,4 @@
-package hk.ecommerce.repositories;
+package hk.ecommerce.jparepositories;
 
 import hk.ecommerce.entities.RegistrationToken;
 import org.springframework.data.jpa.repository.JpaRepository;

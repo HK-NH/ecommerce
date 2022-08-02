@@ -1,8 +1,8 @@
 package hk.ecommerce.services.impl;
 
 import hk.ecommerce.entities.UserOrder;
-import hk.ecommerce.repositories.AppUserRepository;
-import hk.ecommerce.repositories.OrderRepository;
+import hk.ecommerce.jparepositories.AppUserRepository;
+import hk.ecommerce.jparepositories.OrderRepository;
 import hk.ecommerce.services.OrderService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

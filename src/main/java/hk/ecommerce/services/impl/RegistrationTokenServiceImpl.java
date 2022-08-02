@@ -2,7 +2,7 @@ package hk.ecommerce.services.impl;
 
 import hk.ecommerce.entities.AppUser;
 import hk.ecommerce.entities.RegistrationToken;
-import hk.ecommerce.repositories.RegistrationTokenRepository;
+import hk.ecommerce.jparepositories.RegistrationTokenRepository;
 import hk.ecommerce.services.RegistrationTokenService;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +32,10 @@ public class RegistrationTokenServiceImpl implements RegistrationTokenService {
         if(verificationTokenRepository.existsById(id)){
             verificationTokenRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public RegistrationToken findVerificationTokenByToken(String token) {
+        return verificationTokenRepository.findVerificationTokenByToken(token);
     }
 }
