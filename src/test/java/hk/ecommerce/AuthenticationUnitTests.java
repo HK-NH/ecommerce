@@ -16,13 +16,12 @@ public class AuthenticationUnitTests {
     @DisplayName("Test for successfull validation of user")
     public void userValidationHappyFlow(){
         RegistrationTokenService registrationTokenService = mock(RegistrationTokenService.class);
-        RegistrationToken token = new RegistrationToken();
+        RegistrationToken token = mock(RegistrationToken.class);
         String tokenString = "justForTest";
         token.setToken(tokenString);
         given(registrationTokenService.findVerificationTokenByToken(tokenString)).willReturn(token);
-        AppUser appUser = new AppUser();
+        AppUser appUser = mock(AppUser.class);
         token.setUser(appUser);
-        token.getUser().setActive(true);
         registrationTokenService.deleteValidationToken(token.getId());
         given(registrationTokenService.findVerificationTokenByToken(tokenString)).willReturn(null);
 
