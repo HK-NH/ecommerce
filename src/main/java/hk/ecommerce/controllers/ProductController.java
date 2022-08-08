@@ -4,6 +4,7 @@ import hk.ecommerce.entities.Category;
 import hk.ecommerce.entities.Product;
 import hk.ecommerce.services.CategoryService;
 import hk.ecommerce.services.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,13 +27,13 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    public Iterable<Product> getProducts() {
-        return productService.findAll();
+    public Page<Product> getProducts(@RequestParam(value = "page") int page,@RequestParam(value = "size") int size) {
+        return productService.findAll(page,size);
     }
 
     @GetMapping("/category/id/{id}")
     public Iterable<Product> getProductsByCategory(@PathVariable Long id) {
-        return productService.findProductByCategory(id, PageRequest.of(0, 2));
+        return productService.findProductByCategory(id);
     }
 
     @PostMapping(value = "/")

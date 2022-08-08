@@ -9,8 +9,8 @@ import java.util.List;
 public interface ProductService {
 
     void save(Product product);
-    Iterable<Product> findAll();
-    Page<Product> findProductByCategory(Long id, Pageable pageable);
+    Page<Product> findAll(int page,int size);
+    Page<Product> findProductByCategory(Long id);
     String deleteById(Long id);
     String updateById(Long id,Product product);
 }

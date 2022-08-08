@@ -33,13 +33,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Iterable<Product> findAll() {
+    public Page<Product> findAll(int page,int size) {
 //        return productRepository.findAll();
-        return productElasticRepository.findAll();
+        return productElasticRepository.findAll(PageRequest.of(page,size));
     }
 
     @Override
-    public Page<Product> findProductByCategory(Long id, Pageable pageable) {
+    public Page<Product> findProductByCategory(Long id) {
 //        return productRepository.findAllByCategory_Id(id);
         return productElasticRepository.findAllByCategory_Id(id, PageRequest.of(0, 10));
     }
