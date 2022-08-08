@@ -1,5 +1,7 @@
 package hk.ecommerce.entities;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -8,6 +10,7 @@ public class AppRole {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NaturalId
     private String roleName;
 
     public AppRole(Long id, String roleName) {

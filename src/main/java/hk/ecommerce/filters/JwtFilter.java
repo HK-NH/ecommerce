@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import static hk.ecommerce.util.JwtConstants.*;
+import static hk.ecommerce.jwt.JwtConstants.*;
 
 public class JwtFilter extends OncePerRequestFilter {
 

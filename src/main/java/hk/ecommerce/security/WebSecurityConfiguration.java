@@ -42,12 +42,12 @@ public class WebSecurityConfiguration {
         });
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
-//        http.authorizeRequests().mvcMatchers("/api/auth/login","/api/auth/register","/api/auth/refreshToken","/api/auth/validateRegistration/**")
-//                .permitAll();
-//        http.authorizeRequests().anyRequest().authenticated();
-        http.authorizeRequests().anyRequest().permitAll();
+        http.authorizeHttpRequests((authorize) -> authorize.mvcMatchers("/api/auth/login","/api/auth/register","/api/auth/refreshToken","/api/auth/validateRegistration/**")
+                .permitAll()
+                .anyRequest().authenticated());
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {

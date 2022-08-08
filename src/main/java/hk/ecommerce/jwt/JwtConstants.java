@@ -1,4 +1,4 @@
-package hk.ecommerce.util;
+package hk.ecommerce.jwt;
 
 public class JwtConstants {
 

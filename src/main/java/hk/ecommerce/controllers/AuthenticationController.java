@@ -4,16 +4,18 @@ import hk.ecommerce.amqp.RabbitSender;
 import hk.ecommerce.entities.AppUser;
 import hk.ecommerce.services.AppUserService;
 import hk.ecommerce.services.RegistrationTokenService;
-import hk.ecommerce.util.JwtUtil;
+import hk.ecommerce.jwt.JwtUtil;
+import hk.ecommerce.vo.LoginForm;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
 
     private final JwtUtil jwtUtil;
@@ -22,6 +24,7 @@ public class AuthenticationController {
     private final AppUserService appUserService;
     private final RegistrationTokenService verificationTokenService;
     private final RabbitSender rabbitSender;
+    private Logger logger = Logger.getLogger(AuthenticationController.class.getName());
 
     public AuthenticationController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, AppUserService appUserService, RegistrationTokenService verificationTokenService, RabbitSender rabbitSender) {
         this.jwtUtil = jwtUtil;
@@ -32,9 +35,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public Map<String,String> login(@RequestBody AppUser appUser, HttpServletRequest request){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(appUser.getUsername(),appUser.getPassword()));
-        return jwtUtil.createJWT(appUser,request);
+    public Map<String,String> login(@RequestBody LoginForm loginForm, HttpServletRequest request){
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginForm.getUsername(),loginForm.getPassword()));
+        return jwtUtil.createJWT(loginForm,request);
     }
 
 //    @PostMapping("/register")
@@ -52,6 +55,7 @@ public class AuthenticationController {
 
     @GetMapping("/refreshToken")
     public Map<String, String> refreshToken(HttpServletRequest request){
+        logger.info(request.getServletPath());
         return jwtUtil.refreshToken(request);
     }
 
